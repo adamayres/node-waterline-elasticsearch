@@ -1,0 +1,263 @@
+{
+    "project": {
+        "name": "Waterline-ElasticSearch",
+        "description": "ElasticSearch adapter for Waterline storage and retrieval engine.",
+        "version": "0.0.1",
+        "url": "https://github.com/UsabilityDynamics/waterline-elasticsearch/",
+        "logo": "http://a3d72a45d111006ec192-ec5b80a12b0b09b4d52373336afb4254.r80.cf1.rackcdn.com/usability-dynamics.png"
+    },
+    "files": {
+        "lib/adapter.js": {
+            "name": "lib/adapter.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib/utils.js": {
+            "name": "lib/utils.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {},
+    "classitems": [
+        {
+            "file": "lib/adapter.js",
+            "line": 1,
+            "description": "Waterline ElasticSearch Adapter",
+            "params": [
+                {
+                    "name": "settings",
+                    "description": ""
+                },
+                {
+                    "name": "fn",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "*"
+            },
+            "is_constructor": 1,
+            "class": ""
+        },
+        {
+            "file": "lib/adapter.js",
+            "line": 41,
+            "description": "Adapter Instance methods.",
+            "class": ""
+        },
+        {
+            "file": "lib/adapter.js",
+            "line": 47,
+            "params": [
+                {
+                    "name": "collection",
+                    "description": ""
+                },
+                {
+                    "name": "cb",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "*"
+            },
+            "class": ""
+        },
+        {
+            "file": "lib/adapter.js",
+            "line": 124,
+            "params": [
+                {
+                    "name": "collectionName",
+                    "description": ""
+                },
+                {
+                    "name": "options",
+                    "description": ""
+                },
+                {
+                    "name": "stream",
+                    "description": ""
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "lib/adapter.js",
+            "line": 136,
+            "params": [
+                {
+                    "name": "collectionName",
+                    "description": ""
+                },
+                {
+                    "name": "query",
+                    "description": ""
+                },
+                {
+                    "name": "data",
+                    "description": ""
+                },
+                {
+                    "name": "cb",
+                    "description": ""
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "lib/adapter.js",
+            "line": 162,
+            "description": "Adapter Constructor methods.",
+            "class": ""
+        },
+        {
+            "file": "lib/adapter.js",
+            "line": 183,
+            "description": "Instantiation helper.",
+            "params": [
+                {
+                    "name": "settings",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Adapter"
+            },
+            "class": ""
+        },
+        {
+            "file": "lib/utils.js",
+            "line": 1,
+            "description": "Helper Utility Collection",
+            "author": "potanin@UD",
+            "date": "6/17/13",
+            "class": ""
+        },
+        {
+            "file": "lib/utils.js",
+            "line": 11,
+            "description": "SelectableConstructor Properties.",
+            "class": ""
+        },
+        {
+            "file": "lib/utils.js",
+            "line": 17,
+            "description": "Converts a Waterline model to ElasticSearch document.",
+            "params": [
+                {
+                    "name": "values",
+                    "description": ""
+                },
+                {
+                    "name": "collection",
+                    "description": ""
+                },
+                {
+                    "name": "db",
+                    "description": ""
+                },
+                {
+                    "name": "cb",
+                    "description": ""
+                }
+            ],
+            "class": ""
+        },
+        {
+            "file": "lib/utils.js",
+            "line": 71,
+            "description": "Converts ElasticSearch document to Waterline Model",
+            "params": [
+                {
+                    "name": "models",
+                    "description": ""
+                },
+                {
+                    "name": "schema",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Array"
+            },
+            "class": ""
+        }
+    ],
+    "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/adapter.js:1"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/adapter.js:47"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/adapter.js:183"
+        },
+        {
+            "message": "unknown tag: date",
+            "line": " lib/utils.js:1"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/utils.js:71"
+        },
+        {
+            "message": "Missing item type\nWaterline ElasticSearch Adapter",
+            "line": " lib/adapter.js:1"
+        },
+        {
+            "message": "Missing item type\nAdapter Instance methods.",
+            "line": " lib/adapter.js:41"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/adapter.js:47"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/adapter.js:124"
+        },
+        {
+            "message": "Missing item type",
+            "line": " lib/adapter.js:136"
+        },
+        {
+            "message": "Missing item type\nAdapter Constructor methods.",
+            "line": " lib/adapter.js:162"
+        },
+        {
+            "message": "Missing item type\nInstantiation helper.",
+            "line": " lib/adapter.js:183"
+        },
+        {
+            "message": "Missing item type\nHelper Utility Collection",
+            "line": " lib/utils.js:1"
+        },
+        {
+            "message": "Missing item type\nSelectableConstructor Properties.",
+            "line": " lib/utils.js:11"
+        },
+        {
+            "message": "Missing item type\nConverts a Waterline model to ElasticSearch document.",
+            "line": " lib/utils.js:17"
+        },
+        {
+            "message": "Missing item type\nConverts ElasticSearch document to Waterline Model",
+            "line": " lib/utils.js:71"
+        }
+    ]
+}
