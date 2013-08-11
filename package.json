@@ -16,8 +16,8 @@
   },
   "contributors": [ 
     {
-      "name": "Ivan McCarthy",
-      "email": "ivan.mccarthy@usabilitydynamics.com",
+      "name": "Andy Potanin",
+      "email": "andy.potanin@usabilitydynamics.com",
       "url": "http://usabilitydynamics.com"
     }
   ],
@@ -31,7 +31,9 @@
   },
   "main": "./lib/adapter.js",
   "dependencies" : {
+    "elastical": "*",
     "elastic-client": "*",
+    "debug": "*",
     "lodash": "*",
     "pluck": "*",
     "extend": "*",
