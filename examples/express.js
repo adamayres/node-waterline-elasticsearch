@@ -27,24 +27,32 @@ app.models = {};
 // Routes
 
 app.post( '/users', function( req, res ) {
-  app.models.user.create( req.body, function( error, model ) {
+  app.models.user.create( req.body, function( error, data ) {
     if ( error ) return res.json( { error: error } );
-    res.json( model );
+    res.json( data );
   });
 });
 
-app.get( '/users/:id', function( req, res ) {
-
-  app.models.user.find( req.params.id, function( error, model ) {
-
-    console.log( model );
-
+app.get( '/users', function( req, res ) {
+  app.models.user.find( req.params.id, function( error, data ) {
     if ( error ) return res.json( { error: error } );
-    res.json( model[0] );
+
+    res.json( data );
+
   });
 });
+
 
 app.put( '/users', function( req, res ) {
+
+  console.log( req.body );
+
+  console.log( app.models.user.update );
+
+  app.models.user.update( req.body, function( error, data ) {
+    if ( error ) return res.json( { error: error } );
+    res.json( data );
+  });
 
 });
 
