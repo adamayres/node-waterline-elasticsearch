@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>lib/utils.js - Waterline-ElasticSearch</title>
+    <title>lib/utility.js - waterline-elasticsearch</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -15,11 +15,11 @@
     <div id="hd" class="yui3-g header">
         <div class="yui3-u-3-4">
             
-                <h1><img src="http://a3d72a45d111006ec192-ec5b80a12b0b09b4d52373336afb4254.r80.cf1.rackcdn.com/usability-dynamics.png" title="Waterline-ElasticSearch"></h1>
+                <h1><img src="http://media.usabilitydynamics.com/logo.png" title="waterline-elasticsearch"></h1>
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.1</em>
+            <em>API Docs for: 0.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Utility.html">Utility</a></li>
             
             </ul>
 
@@ -80,12 +82,16 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: lib/utils.js</h1>
+                        <h1 class="file-heading">File: lib/utility.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
  * Helper Utility Collection
+ *
+ * @class Utility
+ * @constructor
+ * @method Utility
  *
  * @author potanin@UD
  * @date 6/17/13
@@ -95,8 +101,9 @@ function Utility() {
 }
 
 /**
- * SelectableConstructor Properties.
+ * Utility Properties
  *
+ * @for Utility
  */
 Object.defineProperties( module.exports = Utility, {
   convert_to_elastic: {
@@ -172,7 +179,7 @@ Object.defineProperties( module.exports = Utility, {
         }else if (schema[key].type === &#x27;date&#x27;){
           _.each(models,function(model){
             if (model.doc[key]){
-              model.doc[key] = new Date(Date.UTC(model.doc[key][0],model.doc[key][1]-1,model.doc[key][2],
+              model.doc[key] = new Date( Date.UTC( model.doc[key][0], model.doc[key][1] - 1, model.doc[key][2],
                 model.doc[key][3],model.doc[key][4],model.doc[key][5]));
             }
           });
@@ -197,6 +204,13 @@ Object.defineProperties( module.exports = Utility, {
     configurable: true
   },
   merge: {
+    /**
+     * Simple Merge (not deep)
+     *
+     * @param a
+     * @param b
+     * @returns {*}
+     */
     value: function merge (a, b){
       if (a &amp;&amp; b) {
         for (var key in b) {
@@ -210,24 +224,52 @@ Object.defineProperties( module.exports = Utility, {
     configurable: true
   },
   parse_url: {
-    value: require( &#x27;url&#x27; ).parse,
+    value: function parse_url( config ) {
+
+      if( !Utility.isString( config.url ) ) {
+        return config;
+      }
+
+      var obj = url.parse(config.url);
+
+      config.host = obj.hostname || config.host;
+      config.port = obj.port || config.port;
+
+      if( Utility.isString( obj.path ) ) {
+        config.database = obj.path.split(&quot;/&quot;)[1] || config.database;
+      }
+
+      if( Utility.isString( obj.auth ) ) {
+        config.user = obj.auth.split(&quot;:&quot;)[0] || config.user;
+        config.password = obj.auth.split(&quot;:&quot;)[1] || config.password;
+      }
+
+      return config;
+
+    },
     enumerable: true,
     writable: true,
     configurable: true
   },
   extend: {
-    value: require( &#x27;extend&#x27; ),
+    value: require( &#x27;lodash&#x27; ).extend,
+    enumerable: false,
+    writable: true,
+    configurable: true
+  },
+  isString: {
+    value: require( &#x27;lodash&#x27; ).isString,
     enumerable: false,
     writable: true,
     configurable: true
   },
   pluck: {
-    value: require( &#x27;pluck&#x27; ),
+    value: require( &#x27;lodash&#x27; ).pluck,
     enumerable: true,
     configurable: true,
     writable: true
   }
-})
+});
     </pre>
 </div>
 

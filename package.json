@@ -1,8 +1,10 @@
 {
   "name": "waterline-elasticsearch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ElasticSearch adapter for Waterline storage and retrieval engine.",
+  "homepage": "https://github.com/UsabilityDynamics/waterline-elasticsearch",
   "keywords": [
+    "orm",
     "elasticsearch",
     "waterline",
     "sails"
@@ -31,21 +33,22 @@
   },
   "main": "./lib/adapter.js",
   "dependencies" : {
-    "express": "*",
-    "elastical": "*",
+    "waterline": "*",
     "elastic-client": "*",
     "debug": "*",
     "lodash": "*",
-    "pluck": "*",
-    "extend": "*",
     "auto": "*",
     "async": "*"
   },
   "devDependencies": {
+    "grunt-markdown": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-yuidoc": "*",
+    "grunt-contrib-clean": "*",
+    "express": "*",
     "faker": "*",
     "should": "*",
     "mocha": "*",
-    "waterline": "*",
     "waterline-adapter-tests": "~0.9.3"
   }
 }
