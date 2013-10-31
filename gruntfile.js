@@ -25,6 +25,14 @@ module.exports = function( grunt ) {
       }
     },
 
+    jscoverage: {
+      options: {
+        inputDirectory: 'lib',
+        outputDirectory: './static/lib-cov',
+        highlight: true
+      }
+    },
+
     watch: {
       options: {
         interval: 1000,
@@ -71,12 +79,13 @@ module.exports = function( grunt ) {
 
   // Load tasks
   grunt.loadNpmTasks( 'grunt-markdown' );
+  grunt.loadNpmTasks( 'grunt-jscoverage' );
   grunt.loadNpmTasks( 'grunt-contrib-yuidoc' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-contrib-clean' );
 
   // Build Assets
-  grunt.registerTask( 'default', [ 'yuidoc', 'markdown' ] );
+  grunt.registerTask( 'default', [ 'yuidoc', 'jscoverage', 'markdown' ] );
 
   // Install environment
   // grunt.registerTask( 'install', [ 'shell:pull', 'shell:install', 'yuidoc', 'markdown', 'less', 'requirejs' ] );
@@ -88,7 +97,7 @@ module.exports = function( grunt ) {
   // grunt.registerTask( 'dist', [ 'clean', 'yuidoc', 'markdown', 'less', 'requirejs' ] );
 
   // Update Documentation
-  grunt.registerTask( 'doc', [ 'yuidoc', 'markdown' ] );
+  grunt.registerTask( 'doc', [ 'yuidoc', 'jscoverage', 'markdown' ] );
 
   // Developer Mode
   // grunt.registerTask( 'dev', [ 'watch' ] );
