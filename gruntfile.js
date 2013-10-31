@@ -42,7 +42,7 @@ module.exports = function( grunt ) {
         files: [
           'readme.md'
         ],
-        tasks: [ 'markdown', 'concat' ]
+        tasks: [ 'markdown' ]
       }
     },
 

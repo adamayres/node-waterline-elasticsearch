@@ -2,7 +2,7 @@
   "name": "waterline-elasticsearch",
   "version": "0.0.2",
   "description": "ElasticSearch adapter for Waterline storage and retrieval engine.",
-  "homepage": "https://github.com/UsabilityDynamics/waterline-elasticsearch",
+  "homepage": "https://github.com/UsabilityDynamics/node-waterline-elasticsearch",
   "keywords": [
     "orm",
     "elasticsearch",
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/UsabilityDynamics/waterline-elasticsearch"
+    "url": "https://github.com/UsabilityDynamics/node-waterline-elasticsearch"
   },
   "main": "./lib/adapter.js",
   "dependencies": {
