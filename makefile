@@ -1,33 +1,29 @@
-REPORTER = list
-LIB_COV = static/lib-cov
-JSON_FILE = static/all.json
-HTML_FILE = static/coverage.html
+# Grunt Module Build
+#
+# @type theme
+# @author potanin@UD
+# @version 2.0.0
 
-test-all: clean document lib-cov test-code
+build:
+	npm update
+	grunt
 
-document:
-	yuidoc -q
+watch:
+	grunt watch
 
-test-code:
-	@NODE_ENV=test mocha \
-  --timeout 200 \
-  --ui exports \
-  --reporter $(REPORTER) \
-  test/*.js
-
-test-cov: lib-cov
-	@APP_COVERAGE=1 $(MAKE) test \
-	REPORTER=html-cov > $(HTML_FILE)
-
-lib-cov:
-	jscoverage lib $(LIB_COV)
+test:
+	grunt test
 
 clean:
-	rm -fr static/lib-cov/*
-	rm -fr static/assets/*
-	rm -fr static/classes/*
-	rm -fr static/files/*
-	rm -fr static/modules/*
-	rm -f static/api.js
-	rm -f static/data.json
-	rm -f static/index.html
+	grunt clean
+
+update:
+	npm update
+	grunt update
+
+install:
+	npm install
+	grunt
+
+commit:
+	grunt commit
