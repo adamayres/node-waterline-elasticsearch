@@ -33,9 +33,10 @@
   "dependencies": {
     "waterline": "*",
     "debug": "*",
-    "lodash": "*",
+    "lodash": "~2.4.0",
     "auto": "*",
-    "async": "*"
+    "async": "*",
+    "string": "~1.7.0"
   },
   "devDependencies": {
     "grunt-contrib-symlink": "~0.2.0",

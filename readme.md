@@ -1,6 +1,13 @@
+## Notes
+
+  - Support restricted to a single ElasticSearch server per Waterline Collection.
+  -
+
 ## Basic Usage
 
 ## Advanced Usage
+
+  - Setting a property to enumerable:false will stop it from being included by Waterline.
 
 ## Setting Defaults
 
