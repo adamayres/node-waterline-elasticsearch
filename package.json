@@ -1,11 +1,15 @@
 {
   "name": "waterline-elasticsearch",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ElasticSearch adapter for Waterline storage and retrieval engine.",
   "homepage": "https://github.com/UsabilityDynamics/node-waterline-elasticsearch",
   "config": {
+    "host": "localhost",
     "port": 9200,
-    "hostname": "localhost"
+    "schema": false,
+    "nativeParser": false,
+    "safe": true,
+    "url": null
   },
   "main": "./lib/adapter.js",
   "license": "MIT",
@@ -34,9 +38,10 @@
     "waterline": "*",
     "debug": "*",
     "lodash": "~2.4.0",
-    "auto": "*",
+    "auto": "~0.1.0",
     "async": "*",
-    "string": "~1.7.0"
+    "string": "~1.7.0",
+    "request": "~2.27.0"
   },
   "devDependencies": {
     "grunt-contrib-symlink": "~0.2.0",

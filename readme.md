@@ -1,9 +1,25 @@
 ## Notes
 
   - Support restricted to a single ElasticSearch server per Waterline Collection.
-  -
+  - tableName, identity
 
-## Basic Usage
+## Methods
+
+  - createEach
+  - create
+  - find
+  - count
+  - destroy
+  - teardown
+  - stream
+  - describe
+  - define
+  - drop
+  - alter
+  - addAttribute
+  - removeAttribute
+  - findOrCreate
+  - findOrCreateEach
 
 ## Advanced Usage
 
