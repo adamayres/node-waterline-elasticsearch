@@ -10,7 +10,7 @@
 // Dependencies
 var express   = require( 'express' );
 var waterline = require( 'waterline' );
-var adapter   = require( '../' );
+var adapter   = require( '.' );
 
 // Create App
 var app = express();
