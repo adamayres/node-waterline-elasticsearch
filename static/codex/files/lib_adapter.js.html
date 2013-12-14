@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.2</em>
+            <em>API Docs for: 0.1.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -94,35 +94,38 @@
  * @returns {*}
  * @constructor
  */
-function adapter( settings, fn ) {
+function adapter( options ) {
+
+  // Force Instantiation.
+  if( !( this instanceof adapter ) ) {
+    return adapter.create( options || {} );
+  }
 
   // Configure dynamic settings.
   Object.defineProperties( this, {
-    identity: {
-      value: require( &#x27;../package&#x27; ).name,
-      enumerable: true
-    },
-    syncable: {
-      value: true,
-      enumerable: true
-    },
     defaults: {
       value: {
         host: &#x27;localhost&#x27;,
-        port: 9200,
-        auth: null
+        database: &#x27;default&#x27;
       },
       enumerable: true,
       writable: true
     },
-    connection: {
-      value: undefined,
-      enumerable: true
+    options: {
+      value: options || {},
+      enumerable: true,
+      writable: true
+    },
+    syncable: {
+      value: true,
+      enumerable: true,
+      writable: true
     }
   });
 
   // @chainable
   return this;
+
 }
 
 /**
@@ -131,87 +134,150 @@ function adapter( settings, fn ) {
  */
 Object.defineProperties( adapter.prototype, {
 
+  /**
+   * Administrative.
+   *
+   */
+  registerCollection: {
+    /**
+     * One of the earliest methods called when a type is added.
+     *
+     * @param type
+     * @param callback
+     * @returns {*}
+     */
+    value: function registerCollection( type, callback ) {
+      adapter.debug( &#x27;registerCollection [identity:%s]&#x27;, type.identity );
+
+      // Configure dynamic settings.
+      Object.defineProperties( this, {
+        connection: {
+          value: undefined,
+          enumerable: false
+        },
+        defaults: {
+          value: {
+            host: &#x27;localhost&#x27;,
+            database: &#x27;default&#x27;
+          },
+          enumerable: true,
+          writable: true
+        },
+        identity: {
+          value: &#x27;_identity&#x27;,
+          enumerable: true,
+          writable: true
+        },
+        client: {
+          value: this.options.client ? this.options.client : require( &#x27;elastic-client&#x27; ).create(),
+          enumerable: true,
+          writable: true
+        }
+      });
+
+      callback( null );
+
+      // @chainable
+      return this;
+
+    },
+    enumerable: true,
+    configurable: true,
+    writable: true
+  },
+  utility: {
+    value: require( &#x27;./common/utility&#x27; ),
+    enumerable: false
+  },
+
+  /**
+   * CRUD Related.
+   *
+   */
+  define: {
+    /**
+     * Define Collection Schema.
+     *
+     * Creates the database if it does not already exist
+     *
+     * @param path {String} Name taken from tableName, it seems.
+     * @param definition {Object} Schema.
+     * @param cb
+     * @returns {*}
+     */
+    value: function define( path, definition, cb ) {
+      adapter.debug( &#x27;define( %s )&#x27;, path );
+
+      cb( null, {} );
+
+      // @chainable
+      return this;
+
+    },
+    enumerable: true,
+    configurable: true,
+    writable: true
+  },
   create: {
-    value: function create( collectionName, data, cb ) {
-      adapter.debug( &#x27;create( %s )&#x27;, collectionName );
+    /**
+     * Creates only if there isn&#x27;t already a document there.
+     *
+     * @param type
+     * @param data
+     * @param cb
+     * @returns {*}
+     */
+    value: function create( type, data, callback ) {
+      adapter.debug( &#x27;create [type:%s]&#x27;, type );
 
-      var type    = data.type;
-      var body    = data.body[0];
-      var options = data.body.length === 2 ? body[1] : null;
+      this.client.request( &#x27;post&#x27;, &#x27;/icbl-mtaa-pqbp-hgdt-sgtu/user&#x27;, data, function( error, body ) {
 
-      this.connection.index( collectionName, type, body, options, function( error, response ) {
-        if ( error ) return cb( error, null );
-        cb( null, response );
+        if( error ) {
+          return callback( error );
+        }
+
+        if( body &amp;&amp; !body.ok ) {
+          return callback( new Error( &#x27;Could not save.&#x27; ) );
+        }
+
+        // Not sure if this should be done...
+        data._id = data._id = body._id;
+        data._version = data._version = body._version;
+        data._type = data._type = body._type;
+        data._index = data._index = body._index;
+
+        callback( null, data );
+
       });
+
+      //return callback( null, {} );
 
       // @chainable
       return this;
+
     },
     enumerable: true,
     configurable: true,
     writable: true
   },
-
-
-
-  find: {
-    value: function find( collectionName, options, cb ) {
-      adapter.debug( &#x27;find( %s )&#x27;, collectionName );
-
-
-      this.connection.search( {
-
-        index: collectionName
-
-      }, function( error, response ) {
-        if ( error ) cb( error, null );
-
-        cb( null, response.hits );
-      });
-
-
-
-
-
-/*
-      var opts    = options.where;
-      var results = [];
-
-      var index   = collectionName;
-      var id      = opts.id;
-
-
-      this.connection.get( index, id, function( error, response ) {
-        if ( error ) cb( error, null );
-        value.push( response );
-        cb( null, results );
-      });
-*/
-
-      // @chainable
-      return this;
-    },
-    enumerable: true,
-    configurable: true,
-    writable: true
-  },
-
-
-
   update: {
-    value: function update( collectionName, options, values, cb ) {
-      adapter.debug( &#x27;update( %s )&#x27;, collectionName );
-
-
-console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
-
-
+    /**
+     * Updates Existing.
+     *
+     * @param path
+     * @param options
+     * @param values
+     * @param cb
+     * @returns {*}
+     */
+    value: function update( path, options, values, cb ) {
+      adapter.debug( &#x27;update( %s )&#x27;, path );
 
       var type    = data.type;
       var body    = data.body[0];
       var options = data.body[1];
 
-      this.connection.index( collectionname, type, body, options, function( error, response ) {
+      this.connection.index( type, type, body, options, function( error, response ) {
         if ( error ) return cb( error, null );
         cb( null, response );
       });
@@ -223,16 +289,21 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
     configurable: true,
     writable: true
   },
-
-
-
   destroy: {
-    value: function destroy( collectionName, options, cb ) {
-      adapter.debug( &#x27;destroy( %s )&#x27;, collectionName );
+    /**
+     * Delete one or more models from the type
+     *
+     * @param path
+     * @param options
+     * @param cb
+     * @returns {*}
+     */
+    value: function destroy( path, options, cb ) {
+      adapter.debug( &#x27;destroy( %s )&#x27;, path );
 
       var opts    = options.where;
 
-      var index   = collectionName;
+      var index   = path;
       var type    = opts.type;
       var id      = opts.id;
       var options = opts.options ? opts.options : null;
@@ -252,36 +323,9 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
     configurable: true,
     writable: true
   },
-
-
-
-  registerCollection: {
-    /**
-     *
-     * @param collection
-     * @param cb
-     * @returns {*}
-     */
-    value: function registerCollection( collection, cb ) {
-      adapter.debug( &#x27;registerCollection()&#x27; );
-
-      if( &#x27;undefined&#x27; === typeof this.connection ) {
-        return adapter.createConnection.call( this, collection.config || {}, cb );
-      }
-
-      cb();
-
-      // @chainable
-      return this;
-
-    },
-    enumerable: true,
-    configurable: true,
-    writable: true
-  },
-  teardown: {
-    value: function teardown( cb ) {
-      adapter.debug( &#x27;teardown()&#x27; );
+  drop: {
+    value: function drop( path, cb ) {
+      adapter.debug( &#x27;drop( %s )&#x27;, path );
 
       // @chainable
       return this;
@@ -292,33 +336,19 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
     writable: true
   },
   describe: {
-    value: function describe( collectionName, cb ) {
-      adapter.debug( &#x27;describe( %s )&#x27;, collectionName );
-
-      this.connection.getMapping( &#x27;_all&#x27;, function( error, data ) {
-        cb( null, data.properties )
-      });
-
-      // @chainable
-      return this;
-
-    },
-    enumerable: true,
-    configurable: true,
-    writable: true
-  },
-  define: {
     /**
-     * Model Defined.
+     * Simply returns the schema of the given type.
      *
+     * - Required by Waterline.
      *
-     * @param collectionName {String} Name taken from tableName, it seems.
-     * @param definition {Object} Schema.
+     * @param path
      * @param cb
      * @returns {*}
      */
-    value: function define( collectionName, definition, cb ) {
-      adapter.debug( &#x27;define( %s )&#x27;, collectionName, definition );
+    value: function describe( path, cb ) {
+      adapter.debug( &#x27;describe( %s )&#x27;, path );
+
+      // this.connection.getMapping( &#x27;_all&#x27;, function( error, data ) { cb( null, data.properties ) });
 
       cb( null, {} );
 
@@ -330,9 +360,41 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
     configurable: true,
     writable: true
   },
-  drop: {
-    value: function drop( collectionName, cb ) {
-      adapter.debug( &#x27;drop( %s )&#x27;, collectionName );
+
+  /**
+   * Search Related.
+   *
+   */
+  find: {
+    /**
+     * Find something.
+     *
+     * Example of what we get from Waterline:
+     *  {&quot;where&quot;:{&quot;_id&quot;:&quot;orEXdQEj274Do1OLiTqU32oW&quot;},&quot;limit&quot;:1}
+     *
+     * @param path
+     * @param options
+     * @param cb
+     * @returns {*}
+     */
+    value: function find( type, query, callback ) {
+      adapter.debug( &#x27;find: [%s] [%s]&#x27;, type, JSON.stringify( query ) );
+
+      //console.log( this.tableName );
+
+      this.client.search( query.where, function( error, data ) {
+
+        // No Results.
+        // @todo Should this return an error?
+        if( data.hits.total === 0 ) {
+          return callback( null, [] );
+        }
+
+        // Have Result.
+        // @todo Determine if we should be returhing _source.
+        return callback( null, data.hits.hits );
+
+      });
 
       // @chainable
       return this;
@@ -342,8 +404,170 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
     configurable: true,
     writable: true
   },
+  findOne: {
+    /**
+     * Find Single Model.
+     *
+     * Notice, this is not recognized by Waterline and is only used when called programatically
+     * by other adapter methods, such as from findOrCreate.
+     *
+     * Also be advised, the native findOne method only accepts two arguments.
+     *
+     * @param type
+     * @param query
+     * @param callback
+     * @returns {*}
+     */
+    value: function findOne( type, query, callback ) {
+      adapter.debug( &#x27;findOne [type:%s]&#x27;, type );
+
+      console.log( &#x27;findOne&#x27; );
+
+      var _query = {
+        query: {},
+        from: 0,
+        size: 10
+      };
+
+      if( query.where &amp;&amp; query.where.id ) {
+
+        _query.query.bool = {
+          &quot;must&quot;: [
+            {
+              &quot;query_string&quot;: {
+                &quot;default_field&quot;: [ type, query.where.id ].join( &#x27;.&#x27; ),
+                &quot;query&quot;: query.where.id
+              }
+            }
+          ],
+          &quot;must_not&quot;: [],
+          &quot;should&quot;: []
+        }
+
+      }
+
+      this.client.request( &#x27;post&#x27;, &#x27;/_search&#x27;, _query, function response( error, body ) {
+
+        if( error ) {
+          return callback( error, body );
+        }
+
+        if( body.hits &amp;&amp; body.hits.total &gt; 0 ) {
+          return callback( null, body.hits.hits );
+        }
+
+        // No results.
+        return callback( null );
+
+      });
+
+      //return callback( null );
+
+      // @chainable
+      return this;
+
+    },
+    enumerable: true,
+    configurable: true,
+    writable: true
+  },
+  findOrCreate: {
+    /**
+     *
+     * @param type
+     * @param criteria
+     * @param values
+     * @param callback
+     * @returns {*}
+     */
+    value: function findOrCreate( type, criteria, values, callback ) {
+      adapter.debug( &#x27;findOrCreate: [type:%s]&#x27;, type );
+
+      this.findOne( type, criteria, function( error, result ) {
+
+        // Request Failure.
+        if( error ) {
+          return callback( error );
+        }
+
+        // Have Results.
+        if( result ) {
+          return calback( null, result );
+        }
+
+        // Nothing found, create.
+        this.create( type, values, callback );
+
+        // @chainable
+        return this;
+
+      }.bind( this ) );
+
+      // @chainable
+      return this;
+    },
+    enumerable: true,
+    configurable: true,
+    writable: true
+  },
+  query: {
+    /**
+     *
+     * @param path
+     * @param query
+     * @param data
+     * @param cb
+     */
+    value: function query( path, query, data, cb ) {
+      adapter.debug( &#x27;query( %s )&#x27;, path );
+
+      // @chainable
+      return this;
+
+    },
+    enumerable: true,
+    configurable: true,
+    writable: true
+  },
+  facets: {
+    /**
+     * Facet Query.
+     *
+     * @param path
+     * @param query
+     * @param data
+     * @param cb
+     */
+    value: function facets( path, query, cb ) {
+      adapter.debug( &#x27;facets( %s )&#x27;, query );
+
+      // @chainable
+      return this;
+
+    },
+    enumerable: true,
+    configurable: true,
+    writable: true
+  },
+
+  /**
+   * Not Used / Not Supported.
+   *
+   */
+  teardown: {
+    value: function teardown( cb ) {
+      adapter.debug( &#x27;teardown()&#x27; );
+
+      // @chainable
+      return this;
+
+    },
+    enumerable: false,
+    configurable: true,
+    writable: true
+  },
   native: {
-    value: function _native( collection, cb ) {
+    value: function _native( type, cb ) {
       adapter.debug( &#x27;native()&#x27; );
 
       // @chainable
@@ -355,8 +579,8 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
     writable: true
   },
   createEach: {
-    value: function createEach( collectionName, data, cb ) {
-      adapter.debug( &#x27;createEach( %s )&#x27;, collectionName );
+    value: function createEach( path, data, cb ) {
+      adapter.debug( &#x27;createEach( %s )&#x27;, path );
 
       // @chainable
       return this;
@@ -368,84 +592,54 @@ console.log( &#x27;You\&#x27;re a dirty a whore&#x27; );
   },
   stream: {
     /**
+     * Streams models to ES.
      *
-     * @param collectionName
+     * @param path
      * @param options
      * @param stream
      */
-    value: function stream( collectionName, options, stream ) {
-      adapter.debug( &#x27;stream( %s )&#x27;, collectionName );
+    value: function stream( path, options, stream ) {
+      adapter.debug( &#x27;stream( %s )&#x27;, path );
 
       // @chainable
       return this;
 
     },
-    enumerable: true,
-    configurable: true,
-    writable: true
-  },
-  query: {
-    /**
-     *
-     * @param collectionName
-     * @param query
-     * @param data
-     * @param cb
-     */
-    value: function query( collectionName, query, data, cb ) {
-      adapter.debug( &#x27;query( %s )&#x27;, collectionName );
-
-      // @chainable
-      return this;
-
-    },
-    enumerable: true,
+    enumerable: false,
     configurable: true,
     writable: true
   },
   addAttribute: {
-    value: function addAttribute( collectionName, attrName, attrDef, cb ) {
-      adapter.debug( &#x27;addAttribute( %s )&#x27;, collectionName );
+    value: function addAttribute( path, attrName, attrDef, cb ) {
+      adapter.debug( &#x27;addAttribute( %s )&#x27;, path );
 
       // @chainable
       return this;
 
     },
-    enumerable: true,
+    enumerable: false,
     configurable: true,
     writable: true
   },
   removeAttribute: {
-    value: function removeAttribute( collectionName, attrName, cb ) {
-      adapter.debug( &#x27;removeAttribute( %s )&#x27;, collectionName );
+    value: function removeAttribute( path, attrName, cb ) {
+      adapter.debug( &#x27;removeAttribute( %s )&#x27;, path );
 
       // @chainable
       return this;
 
     },
-    enumerable: true,
+    enumerable: false,
     configurable: true,
     writable: true
   }
+
 });
 
 /**
  * adapter Constructor methods.
  */
 Object.defineProperties( module.exports = adapter, {
-  defaults: {
-    value: {
-      host: &#x27;localhost&#x27;,
-      port: 9200,
-      schema: false,
-      nativeParser: false,
-      safe: true,
-      url: null
-    },
-    enumerable: true,
-    configurable: true,
-    writable: true
-  },
   create: {
     /**
      * Instantiation helper.
@@ -453,53 +647,18 @@ Object.defineProperties( module.exports = adapter, {
      * @param settings
      * @returns {adapter}
      */
-    value: function create( settings, fn ) {
-      return new adapter( settings, fn );
+    value: function create( options ) {
+      return new adapter( options || {} );
     },
-    enumerable: true,
-    configurable: true,
-    writable: true
-  },
-  createConnection: {
-    /**
-     * Connect to ElasticSearch
-     *
-     * @private
-     * @param config
-     * @param cb
-     */
-    value: function createConnection( config, cb ) {
-      adapter.debug( &#x27;registerCollection()&#x27; );
-
-      var elastical = require( &#x27;elastical&#x27; );
-
-      // Instantiate Elastical client.
-      this.connection = new elastical.Client( config.url, {
-        port: config.port || 9200,
-        auth: config.auth || null
-      });
-
-      // Make simple request to verify connectivity.
-      this.connection.getMapping( &#x27;_all&#x27;, function( error, data ) {
-        cb( error, data ? data.properties : null )
-      });
-
-      return this;
-    },
-    enumerable: true,
-    configurable: true,
-    writable: true
+    enumerable: true
   },
   debug: {
     value: require( &#x27;debug&#x27; )( &#x27;waterline:elasticsearch&#x27; ),
-    enumerable: true,
-    configurable: true,
     writable: true
   },
-  utility: {
-    value: require( &#x27;./utility&#x27; ),
+  defaults: {
+    value: require( &#x27;../package&#x27; ).config,
     enumerable: true,
-    configurable: true,
     writable: true
   }
 });
@@ -516,7 +675,7 @@ Object.defineProperties( module.exports = adapter, {
 <script src="../assets/vendor/prettify/prettify-min.js"></script>
 <script>prettyPrint();</script>
 <script src="../assets/js/yui-prettify.js"></script>
-<script src="../api.js"></script>
+<script src="../assets/../api.js"></script>
 <script src="../assets/js/api-filter.js"></script>
 <script src="../assets/js/api-list.js"></script>
 <script src="../assets/js/api-search.js"></script>
