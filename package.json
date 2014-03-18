@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "waterline": "*",
-    "elastic-client": "UsabilityDynamics/node-elastic-client",
+    "elastic-client": "~0.0.3",
     "debug": "*",
     "lodash": "~2.4.0",
     "auto": "~0.1.0",
